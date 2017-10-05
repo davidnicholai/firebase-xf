@@ -1,16 +1,12 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Firebase.Xamarin.Auth;
-using FirebaseXF.Annotations;
 using Xamarin.Forms;
-
 
 namespace FirebaseXF
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : BindableBase
     {
         private const string FirebaseBaseUrl = "";
         private const string FirebaseApiKey = "";
@@ -28,52 +24,39 @@ namespace FirebaseXF
 
         public string Email
         {
-            get => _email;
-            set
-            {
-                _email = value;
-                OnPropertyChanged(nameof(Email));
-            }
+            get { return _email; }
+            set { SetProperty(ref _email, value); }
         }
 
         public string Password
         {
-            get => _password;
-            set
-            {
-                _password = value;
-                OnPropertyChanged(nameof(Password));
-            }
+            get { return _password; }
+            set { SetProperty(ref _password, value); }
         }
 
         public string Log
         {
-            get => _log;
-            set
-            {
-                _log = value;
-                OnPropertyChanged(nameof(Log));
-            }
+            get { return _log; }
+            set { SetProperty(ref _log, value); }
         }
 
         public ICommand LoginCommand
         {
-            get => _loginCommand;
-            set { _loginCommand = value; OnPropertyChanged(nameof(LoginCommand)); }
+            get { return _loginCommand; }
+            set { SetProperty(ref _loginCommand, value); }
         }
 
         public ICommand RegisterCommand
         {
-            get => _registerCommand;
-            set { _registerCommand = value; OnPropertyChanged(nameof(RegisterCommand)); }
+            get { return _registerCommand; }
+            set { SetProperty(ref _registerCommand, value); }
         }
 
         public ICommand FacebookLoginCommand
         {
-            get => _facebookLoginCommand;
-            set { _facebookLoginCommand = value; OnPropertyChanged(nameof(FacebookLoginCommand)); }
+            get { return _facebookLoginCommand; }
+            set { SetProperty(ref _facebookLoginCommand, value); }
         }
-
 
         public MainViewModel()
         {
@@ -93,7 +76,7 @@ namespace FirebaseXF
                 _jwt = string.IsNullOrEmpty(auth.FirebaseToken) ? string.Empty : auth.FirebaseToken;
                 Log = _jwt;
             }
-            catch (HttpRequestException e)
+            catch(HttpRequestException e)
             {
                 Log = "HttpRequestException" + e.Message;
             }
@@ -146,16 +129,5 @@ namespace FirebaseXF
             }
         }
 
-        #region INotifyPropertyChanged Implementations
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
     }
 } 
