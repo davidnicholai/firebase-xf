@@ -95,17 +95,5 @@ namespace FirebaseXF
         {
             PropertyChanged?.Invoke(this, args);
         }
-
-        /// <summary>
-        /// Raises this object's PropertyChanged event.
-        /// </summary>
-        /// <typeparam name="T">The type of the property that has a new value</typeparam>
-        /// <param name="propertyExpression">A Lambda expression representing the property that has a new value.</param>
-        [Obsolete("Please use RaisePropertyChanged(nameof(PropertyName)) instead. Expressions are slower, and the new nameof feature eliminates the magic strings.")]
-        protected virtual void OnPropertyChanged<T>(Expression<Func<T>> propertyExpression)
-        {
-            var propertyName = PropertySupport.ExtractPropertyName(propertyExpression);
-            OnPropertyChanged(propertyName);
-        }
     }
 }
