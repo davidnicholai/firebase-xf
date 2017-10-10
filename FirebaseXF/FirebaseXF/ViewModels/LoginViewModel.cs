@@ -2,11 +2,12 @@
 using System.Net.Http;
 using System.Windows.Input;
 using Firebase.Xamarin.Auth;
+using Xamarin.Auth;
 using Xamarin.Forms;
 
 namespace FirebaseXF
 {
-    public class MainViewModel : BindableBase
+    public class LoginViewModel : BaseViewModel
     {
         private const string FirebaseBaseUrl = "";
         private const string FirebaseApiKey = "";
@@ -58,7 +59,7 @@ namespace FirebaseXF
             set { SetProperty(ref _facebookLoginCommand, value); }
         }
 
-        public MainViewModel()
+        public LoginViewModel()
         {
             LoginCommand = new Command(AsyncLogin);
             RegisterCommand = new Command(AsyncRegister);
@@ -75,8 +76,11 @@ namespace FirebaseXF
 
                 _jwt = string.IsNullOrEmpty(auth.FirebaseToken) ? string.Empty : auth.FirebaseToken;
                 Log = _jwt;
+
+                storeCredentials(Email, Password);
+                Application.Current.Properties.Add(Constants.PropKeyIsLoggedIn, true);
             }
-            catch(HttpRequestException e)
+            catch (HttpRequestException e)
             {
                 Log = "HttpRequestException" + e.Message;
             }
@@ -96,15 +100,16 @@ namespace FirebaseXF
 
                 _jwt = string.IsNullOrEmpty(auth.FirebaseToken) ? string.Empty : auth.FirebaseToken;
                 Log = _jwt;
+
             }
             catch (HttpRequestException e)
             {
-                Log = "HttpRequestException"  + e.Message;
+                Log = "HttpRequestException" + e.Message;
             }
             catch (Exception e)
             {
                 Log = "Exception";
-            }           
+            }
         }
 
         private async void AsyncFacebookLogin()
@@ -129,5 +134,17 @@ namespace FirebaseXF
             }
         }
 
+        private void storeCredentials(string email, string password)
+        {
+            if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
+            {
+                Account account = new Account()
+                {
+                    Username = email,
+                };
+                account.Properties.Add("Password", password);
+                AccountStore.Create().Save(account, Constants.AppName);
+            }
+        }
     }
-} 
+}

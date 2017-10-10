@@ -8,12 +8,23 @@ namespace FirebaseXF
         {
             InitializeComponent();
 
-            MainPage = new FirebaseXF.MainPage();
+            MainPage = new NavigationPage(new FirebaseXF.MainPage());
         }
 
         protected override void OnStart()
         {
-            // Handle when your app starts
+            // Since the key does not exist yet, it means that this is the app's first run and the user is not logged in.
+            if (!Application.Current.Properties.ContainsKey(Constants.PropKeyIsLoggedIn))
+            {
+                navigateToLoginPage();
+            }
+
+            if (!Application.Current.Properties.ContainsKey(Constants.PropKeyIsLoggedIn)) return;
+            bool? isLoggedIn = Current.Properties[Constants.PropKeyIsLoggedIn] as bool?;
+            if (isLoggedIn != null && !((bool)isLoggedIn))
+            {
+                navigateToLoginPage();
+            }
         }
 
         protected override void OnSleep()
@@ -24,6 +35,11 @@ namespace FirebaseXF
         protected override void OnResume()
         {
             // Handle when your app resumes
+        }
+
+        private async void navigateToLoginPage()
+        {
+            await ((NavigationPage)MainPage).PushAsync(new LoginPage(), true);
         }
     }
 }

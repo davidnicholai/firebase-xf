@@ -9,7 +9,7 @@ namespace FirebaseXF
     /// <summary>
     /// Implementation of <see cref="INotifyPropertyChanged"/> to simplify models.
     /// </summary>
-    public abstract class BindableBase : INotifyPropertyChanged
+    public abstract class BaseViewModel : INotifyPropertyChanged
     {
         /// <summary>
         /// Occurs when a property value changes.

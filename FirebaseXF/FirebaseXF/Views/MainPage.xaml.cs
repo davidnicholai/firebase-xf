@@ -11,5 +11,6 @@ namespace FirebaseXF
             InitializeComponent();
             BindingContext = _vm = new MainViewModel();
         }
+
     }
 }

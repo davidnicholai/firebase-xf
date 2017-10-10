@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="FirebaseXF.MainPage">
+             x:Class="FirebaseXF.LoginPage">
 
     <StackLayout VerticalOptions="CenterAndExpand">
-        <Entry Placeholder="Email" Text="{Binding Email}}" />
+        <Entry Placeholder="Email" Text="{Binding Email}" />
         <Entry Placeholder="Password" IsPassword="True" Text="{Binding Password}" />
-        <Button Text="Login" Command="{Binding LoginCommand}" />
+        <Button Text="Login" IsEnabled="{Binding IsLoggingIn}" Command="{Binding LoginCommand}" />
         <Button Text="Register" Command="{Binding RegisterCommand}" />
         <Button Text="Sign in with Facebook" Command="{Binding FacebookLoginCommand}" />
         <Label Text="{Binding Log}"></Label>
