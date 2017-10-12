@@ -23,6 +23,8 @@ namespace FirebaseXF
         private ICommand _registerCommand;
         private ICommand _facebookLoginCommand;
 
+        public Action PopAction { get; set; }
+
         public string Email
         {
             get { return _email; }
@@ -77,8 +79,12 @@ namespace FirebaseXF
                 _jwt = string.IsNullOrEmpty(auth.FirebaseToken) ? string.Empty : auth.FirebaseToken;
                 Log = _jwt;
 
+                TokenManager.Instance.Token = _jwt;
+
                 storeCredentials(Email, Password);
                 Application.Current.Properties.Add(Constants.PropKeyIsLoggedIn, true);
+
+                PopAction?.Invoke();
             }
             catch (HttpRequestException e)
             {
