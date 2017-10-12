@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using FirebaseXF.Views;
+using Xamarin.Forms;
 
 namespace FirebaseXF
 {
@@ -10,6 +11,13 @@ namespace FirebaseXF
         {
             InitializeComponent();
             BindingContext = _vm = new MainViewModel();
+
+            _vm.NavigateArticlesAction = navigateToArticlesPage;
+        }
+
+        private void navigateToArticlesPage()
+        {
+            Navigation.PushAsync(new ArticlesPage(), true);
         }
 
     }
