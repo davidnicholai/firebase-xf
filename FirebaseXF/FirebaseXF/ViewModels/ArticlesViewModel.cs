@@ -29,29 +29,48 @@ namespace FirebaseXF.ViewModels
         {
             try
             {
+                var firebaseClient = new FirebaseClient(Constants.FirebaseDbUrl);
+                var items = await firebaseClient
+                    .Child("our-users")
+                    .WithAuth(TokenManager.Instance.Token)
+                    .OnceAsync<User>();
 
-                var firebaseClient = new FirebaseClient(Constants.FirebaseBaseUrl);
-                //var items = await firebaseClient.Child("users").WithAuth(TokenManager.Instance.Token).LimitToFirst(2)
-                //    .OnceAsync<string>();
-
-                //foreach (var item in items)
-                //{
-                //    System.Diagnostics.Debug.WriteLine($"GOTCHA {item}");
-                //}
-                // add new item to list of data 
-                var item = await firebaseClient
-                    .Child("fir-playground-13c13")
-                    .WithAuth(TokenManager.Instance.Token) // <-- Add Auth token if required. Auth instructions further down in readme.
-                    .PostAsync(new User());
+                foreach (var item in items)
+                {
+                    System.Diagnostics.Debug.WriteLine($"GOTCHA {item.Object.FirstName}");
+                }
             }
             catch (HttpRequestException e)
             {
-                
                 System.Diagnostics.Debug.WriteLine($"HttpRequestException {e.Message}");
             }
             catch (Exception e)
             {
+                System.Diagnostics.Debug.WriteLine($"Exception {e.Message}");
+            }
+        }
 
+        private async void saveData()
+        {
+            try
+            {
+                var firebase = new FirebaseClient(Constants.FirebaseDbUrl);
+
+                var token = TokenManager.Instance.Token;
+
+                var item = await firebase
+                    .Child("our-users")
+                    .WithAuth(TokenManager.Instance.Token)
+                    .PostAsync(new User() { FirstName = "John", LastName = "Do2eth" }, false);
+
+                System.Diagnostics.Debug.WriteLine($"Key for the new item: {item.Key}");
+            }
+            catch (HttpRequestException e)
+            {
+                System.Diagnostics.Debug.WriteLine($"HttpRequestException {e.Message}");
+            }
+            catch (Exception e)
+            {
                 System.Diagnostics.Debug.WriteLine($"Exception {e.Message}");
             }
         }

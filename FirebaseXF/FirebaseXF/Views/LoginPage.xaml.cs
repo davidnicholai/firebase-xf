@@ -11,12 +11,12 @@ namespace FirebaseXF
             InitializeComponent();
             BindingContext = _vm = new LoginViewModel();
 
-            _vm.PopAction = popPage;
+            _vm.PopPageAction = popPage;
         }
 
         private void popPage()
         {
-            Navigation.PopAsync();
+            Navigation.PopAsync(true);
         }
     }
 }

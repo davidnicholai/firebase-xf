@@ -9,21 +9,14 @@ namespace FirebaseXF
 {
     public class LoginViewModel : BaseViewModel
     {
-        private const string FirebaseBaseUrl = "";
-        private const string FirebaseApiKey = "";
-
-        private const string FacebookAppId = "";
-        private const string FacebookAppSecret = "";
-
         private string _email;
         private string _password;
         private string _log;
         private string _jwt = string.Empty;
         private ICommand _loginCommand;
         private ICommand _registerCommand;
-        private ICommand _facebookLoginCommand;
 
-        public Action PopAction { get; set; }
+        public Action PopPageAction { get; set; }
 
         public string Email
         {
@@ -55,80 +48,51 @@ namespace FirebaseXF
             set { SetProperty(ref _registerCommand, value); }
         }
 
-        public ICommand FacebookLoginCommand
-        {
-            get { return _facebookLoginCommand; }
-            set { SetProperty(ref _facebookLoginCommand, value); }
-        }
-
         public LoginViewModel()
         {
             LoginCommand = new Command(AsyncLogin);
             RegisterCommand = new Command(AsyncRegister);
-            FacebookLoginCommand = new Command(AsyncFacebookLogin);
         }
 
         private async void AsyncLogin()
         {
-            var authProvider = new FirebaseAuthProvider(new FirebaseConfig(FirebaseApiKey));
-
             try
             {
+                var authProvider = new FirebaseAuthProvider(new FirebaseConfig(Constants.FirebaseApiKey));
                 var auth = await authProvider.SignInWithEmailAndPasswordAsync(Email, Password);
 
-                _jwt = string.IsNullOrEmpty(auth.FirebaseToken) ? string.Empty : auth.FirebaseToken;
-                Log = _jwt;
-
-                TokenManager.Instance.Token = _jwt;
+                TokenManager.Instance.Token = string.IsNullOrEmpty(auth.FirebaseToken) ? string.Empty : auth.FirebaseToken;
 
                 storeCredentials(Email, Password);
-                Application.Current.Properties.Add(Constants.PropKeyIsLoggedIn, true);
 
-                PopAction?.Invoke();
+                //Application.Current.Properties.Add(Constants.PropKeyIsLoggedIn, true);
+
+                PopPageAction?.Invoke();
             }
             catch (HttpRequestException e)
             {
-                Log = "HttpRequestException" + e.Message;
+                Log = "HttpRequestException " + e.Message;
             }
             catch (Exception e)
             {
-                Log = "Exception";
+                Log = "Exception " + e.Message;
             }
         }
 
         private async void AsyncRegister()
         {
-            var authProvider = new FirebaseAuthProvider(new FirebaseConfig(FirebaseApiKey));
+            var authProvider = new FirebaseAuthProvider(new FirebaseConfig(Constants.FirebaseApiKey));
 
             try
             {
                 var auth = await authProvider.CreateUserWithEmailAndPasswordAsync(Email, Password);
 
-                _jwt = string.IsNullOrEmpty(auth.FirebaseToken) ? string.Empty : auth.FirebaseToken;
-                Log = _jwt;
+                TokenManager.Instance.Token = string.IsNullOrEmpty(auth.FirebaseToken) ? string.Empty : auth.FirebaseToken;
 
-            }
-            catch (HttpRequestException e)
-            {
-                Log = "HttpRequestException" + e.Message;
-            }
-            catch (Exception e)
-            {
-                Log = "Exception";
-            }
-        }
+                storeCredentials(Email, Password);
+                Application.Current.Properties.Add(Constants.PropKeyIsLoggedIn, true);
 
-        private async void AsyncFacebookLogin()
-        {
-            var authProvider = new FirebaseAuthProvider(new FirebaseConfig(FirebaseApiKey));
-            const string facebookAccessToken = FacebookAppSecret;
-
-            try
-            {
-                var auth = await authProvider.SignInWithOAuthAsync(FirebaseAuthType.Facebook, "");
-
-                _jwt = string.IsNullOrEmpty(auth.FirebaseToken) ? string.Empty : auth.FirebaseToken;
-                Log = _jwt;
+                PopPageAction?.Invoke();
             }
             catch (HttpRequestException e)
             {

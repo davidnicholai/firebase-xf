@@ -14,19 +14,23 @@ namespace FirebaseXF
         protected override void OnStart()
         {
             // Since the key does not exist yet, it means that this is the app's first run and the user is not logged in.
-            if (!Current.Properties.ContainsKey(Constants.PropKeyIsLoggedIn))
-            {
-                navigateToLoginPage();
-            }
+            //if (!Current.Properties.ContainsKey(Constants.PropKeyIsLoggedIn))
+            //{
+            //    navigateToLoginPage();
+            //}
+            //else
+            //{
+            //    if (Current.Properties.ContainsKey(Constants.PropKeyIsLoggedIn))
+            //    {
+            //        bool? isLoggedIn = Current.Properties[Constants.PropKeyIsLoggedIn] as bool?;
+            //        if (isLoggedIn != null && !((bool)isLoggedIn))
+            //        {
+            //            navigateToLoginPage();
+            //        }
+            //    }
+            //}
 
-            if (Current.Properties.ContainsKey(Constants.PropKeyIsLoggedIn))
-            {
-                bool? isLoggedIn = Current.Properties[Constants.PropKeyIsLoggedIn] as bool?;
-                if (isLoggedIn != null && !((bool)isLoggedIn))
-                {
-                    navigateToLoginPage();
-                }
-            }
+            navigateToLoginPage();
         }
 
         protected override void OnSleep()
