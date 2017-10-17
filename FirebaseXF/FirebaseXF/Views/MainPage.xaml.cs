@@ -12,10 +12,10 @@ namespace FirebaseXF
             InitializeComponent();
             BindingContext = _vm = new MainViewModel();
 
-            _vm.NavigateArticlesAction = navigateToArticlesPage;
+            _vm.NavigateArticlesAction = NavigateToArticlesPage;
         }
 
-        private void navigateToArticlesPage()
+        private void NavigateToArticlesPage()
         {
             Navigation.PushAsync(new ArticlesPage(), true);
         }

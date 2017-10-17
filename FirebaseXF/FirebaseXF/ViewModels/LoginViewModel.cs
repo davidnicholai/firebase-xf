@@ -4,6 +4,8 @@ using System.Windows.Input;
 using Firebase.Xamarin.Auth;
 using Xamarin.Auth;
 using Xamarin.Forms;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace FirebaseXF
 {
@@ -50,11 +52,11 @@ namespace FirebaseXF
 
         public LoginViewModel()
         {
-            LoginCommand = new Command(AsyncLogin);
-            RegisterCommand = new Command(AsyncRegister);
+            LoginCommand = new Command(LoginAsync);
+            RegisterCommand = new Command(RegisterAsync);
         }
 
-        private async void AsyncLogin()
+        private async void LoginAsync()
         {
             try
             {
@@ -63,23 +65,23 @@ namespace FirebaseXF
 
                 TokenManager.Instance.Token = string.IsNullOrEmpty(auth.FirebaseToken) ? string.Empty : auth.FirebaseToken;
 
-                storeCredentials(Email, Password);
-
-                //Application.Current.Properties.Add(Constants.PropKeyIsLoggedIn, true);
+                StoreCredentials(Email, Password);
 
                 PopPageAction?.Invoke();
             }
             catch (HttpRequestException e)
             {
+                System.Diagnostics.Debug.WriteLine($"HttpRequestException {e.Message}");
                 Log = "HttpRequestException " + e.Message;
             }
             catch (Exception e)
             {
+                System.Diagnostics.Debug.WriteLine($"Exception {e.Message}");
                 Log = "Exception " + e.Message;
             }
         }
 
-        private async void AsyncRegister()
+        private async void RegisterAsync()
         {
             var authProvider = new FirebaseAuthProvider(new FirebaseConfig(Constants.FirebaseApiKey));
 
@@ -89,22 +91,23 @@ namespace FirebaseXF
 
                 TokenManager.Instance.Token = string.IsNullOrEmpty(auth.FirebaseToken) ? string.Empty : auth.FirebaseToken;
 
-                storeCredentials(Email, Password);
-                Application.Current.Properties.Add(Constants.PropKeyIsLoggedIn, true);
+                StoreCredentials(Email, Password);
 
                 PopPageAction?.Invoke();
             }
             catch (HttpRequestException e)
             {
+                System.Diagnostics.Debug.WriteLine($"HttpRequestException {e.Message}");
                 Log = "HttpRequestException" + e.Message;
             }
             catch (Exception e)
             {
+                System.Diagnostics.Debug.WriteLine($"Exception {e.Message}");
                 Log = "Exception";
             }
         }
 
-        private void storeCredentials(string email, string password)
+        private void StoreCredentials(string email, string password)
         {
             if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
             {
@@ -116,5 +119,6 @@ namespace FirebaseXF
                 AccountStore.Create().Save(account, Constants.AppName);
             }
         }
+
     }
 }

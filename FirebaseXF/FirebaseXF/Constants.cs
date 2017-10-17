@@ -4,6 +4,9 @@
     {
         public const string AppName = "FirebaseXF";
 
-        public const string PropKeyIsLoggedIn = "IsLoggedIn";
+        public const string FirebaseBaseUrl = "";
+        public const string FirebaseApiKey = "";
+
+        public const string FirebaseDbUrl = "";
     }
 }

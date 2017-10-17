@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FirebaseXF.LoginPage">
 
-    <StackLayout VerticalOptions="CenterAndExpand">
+    <StackLayout VerticalOptions="CenterAndExpand" Padding="20">
         <Entry Placeholder="Email" Text="{Binding Email}" />
         <Entry Placeholder="Password" IsPassword="True" Text="{Binding Password}" />
         <Button Text="Login" IsEnabled="{Binding IsLoggingIn}" Command="{Binding LoginCommand}" />
