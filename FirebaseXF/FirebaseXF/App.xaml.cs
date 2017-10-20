@@ -8,7 +8,7 @@ namespace FirebaseXF
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new LoginTestPage());
+            MainPage = new NavigationPage(new LoginDemoPage());
         }
 
         protected override void OnStart()
