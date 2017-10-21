@@ -68,7 +68,7 @@ namespace FirebaseXF
             try
             {
                 // TODO: Replace YOUR_API_KEY to an actual API key from Firebase.
-                var authProvider = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyCY6jbDmUBmDAVD40OnZwada-cXq4CzpJg"));
+                var authProvider = new FirebaseAuthProvider(new FirebaseConfig("YOUR_API_KEY"));
                 var auth = await authProvider.SignInWithEmailAndPasswordAsync(Email, Password);
 
                 Log = "Successfully logged in! Your token is: " + auth.FirebaseToken;
@@ -94,7 +94,7 @@ namespace FirebaseXF
             try
             {
                 // TODO: Replace YOUR_API_KEY to an actual API key from Firebase.
-                var authProvider = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyCY6jbDmUBmDAVD40OnZwada-cXq4CzpJg"));
+                var authProvider = new FirebaseAuthProvider(new FirebaseConfig("YOUR_API_KEY"));
                 var auth = await authProvider.CreateUserWithEmailAndPasswordAsync(Email, Password);
 
                 Log = "Successfully registered! Your token is: " + auth.FirebaseToken;
