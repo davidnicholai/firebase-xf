@@ -4,11 +4,13 @@
              x:Class="FirebaseXF.LoginPage">
 
     <StackLayout VerticalOptions="CenterAndExpand" Padding="20">
-        <Entry Placeholder="Email" Text="{Binding Email}" />
+        <Entry Placeholder="Email" Text="{Binding Email}"/>
         <Entry Placeholder="Password" IsPassword="True" Text="{Binding Password}" />
-        <Button Text="Login" IsEnabled="{Binding IsLoggingIn}" Command="{Binding LoginCommand}" />
+        <Button Text="Login" Command="{Binding LoginCommand}" />
         <Button Text="Register" Command="{Binding RegisterCommand}" />
-        <Label Text="{Binding Log}"></Label>
+
+        <BoxView HeightRequest="1" BackgroundColor="Gray" />
+        <Label FontSize="Large" Text="{Binding Log}" />
     </StackLayout>
 
 </ContentPage>

@@ -4,21 +4,20 @@ using System.Windows.Input;
 using Firebase.Xamarin.Auth;
 using Xamarin.Auth;
 using Xamarin.Forms;
-using System.Threading.Tasks;
 using System.Linq;
 
 namespace FirebaseXF
 {
     public class LoginViewModel : BaseViewModel
     {
+        #region Fields and Properties
+
         private string _email;
         private string _password;
-        private string _log;
-        private string _jwt = string.Empty;
         private ICommand _loginCommand;
         private ICommand _registerCommand;
 
-        public Action PopPageAction { get; set; }
+        private string _log;
 
         public string Email
         {
@@ -50,75 +49,112 @@ namespace FirebaseXF
             set { SetProperty(ref _registerCommand, value); }
         }
 
+        #endregion
+
         public LoginViewModel()
         {
             LoginCommand = new Command(LoginAsync);
             RegisterCommand = new Command(RegisterAsync);
+            Log = "Status: Nothing going on yet, but make sure to register a user via this app if you haven't already.";
         }
 
+        #region Login and Register
+
+        /// <summary>
+        /// Login implementation. Make sure to populate YOUR_API_KEY!
+        /// </summary>
         private async void LoginAsync()
         {
             try
             {
-                var authProvider = new FirebaseAuthProvider(new FirebaseConfig(Constants.FirebaseApiKey));
+                // TODO: Replace YOUR_API_KEY to an actual API key from Firebase.
+                var authProvider = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyCY6jbDmUBmDAVD40OnZwada-cXq4CzpJg"));
                 var auth = await authProvider.SignInWithEmailAndPasswordAsync(Email, Password);
 
-                TokenManager.Instance.Token = string.IsNullOrEmpty(auth.FirebaseToken) ? string.Empty : auth.FirebaseToken;
-
-                StoreCredentials(Email, Password);
-
-                PopPageAction?.Invoke();
+                Log = "Successfully logged in! Your token is: " + auth.FirebaseToken;
+                // From here, you have a token (in auth.FirebaseToken) which you can use to
+                // do any of Firebase's features, make sure to store it somewhere!
             }
             catch (HttpRequestException e)
             {
-                System.Diagnostics.Debug.WriteLine($"HttpRequestException {e.Message}");
-                Log = "HttpRequestException " + e.Message;
+                Log = "An HttpRequestException occurred.";
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine($"Exception {e.Message}");
-                Log = "Exception " + e.Message;
+
+                Log = "An Exception occurred.";
             }
         }
 
+        /// <summary>
+        /// Register implementation. Make sure to populate YOUR_API_KEY!
+        /// </summary>
         private async void RegisterAsync()
         {
-            var authProvider = new FirebaseAuthProvider(new FirebaseConfig(Constants.FirebaseApiKey));
-
             try
             {
+                // TODO: Replace YOUR_API_KEY to an actual API key from Firebase.
+                var authProvider = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyCY6jbDmUBmDAVD40OnZwada-cXq4CzpJg"));
                 var auth = await authProvider.CreateUserWithEmailAndPasswordAsync(Email, Password);
 
-                TokenManager.Instance.Token = string.IsNullOrEmpty(auth.FirebaseToken) ? string.Empty : auth.FirebaseToken;
-
-                StoreCredentials(Email, Password);
-
-                PopPageAction?.Invoke();
+                Log = "Successfully registered! Your token is: " + auth.FirebaseToken;
+                // From here, you have a token (in auth.FirebaseToken) which you can use to
+                // do any of Firebase's features, make sure to store it somewhere!
             }
             catch (HttpRequestException e)
             {
-                System.Diagnostics.Debug.WriteLine($"HttpRequestException {e.Message}");
-                Log = "HttpRequestException" + e.Message;
+                Log = "An HttpRequestException occurred.";
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine($"Exception {e.Message}");
-                Log = "Exception";
+                Log = "An Exception occurred.";
             }
         }
 
+        #endregion
+
+        #region Securely handling credentials
+
+        /// <summary>
+        /// Stores your user's credentials in a secure manner. It's up to you where you will include this method.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
         private void StoreCredentials(string email, string password)
         {
-            if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
+            Xamarin.Auth.Account account = new Account()
             {
-                Account account = new Account()
-                {
-                    Username = email,
-                };
-                account.Properties.Add("Password", password);
-                AccountStore.Create().Save(account, Constants.AppName);
-            }
+                Username = email
+            };
+            account.Properties.Add("Password", password);
+            Xamarin.Auth.AccountStore.Create().Save(account, "FirebaseXF");
+
         }
+
+        /// <summary>
+        /// Retrieves your user's credentials which was stored in previous sessions.
+        /// </summary>
+        /// <returns></returns>
+        private Xamarin.Auth.Account GetCredentials()
+        {
+            return AccountStore.Create().FindAccountsForService("FirebaseXF").FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Checks if the device contains any credentials.
+        /// </summary>
+        /// <returns></returns>
+        private bool HasStoredCredentials()
+        {
+            if (GetCredentials() != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        #endregion
 
     }
 }
